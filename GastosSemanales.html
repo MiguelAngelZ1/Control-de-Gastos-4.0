@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Gastos - Gastos</title>
+    <link rel="icon" href="/frontend/assets/img/favicon.ico">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/frontend/assets/css/style.css">
+</head>
+<body>
+    <!-- Navbar igual a index -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">Control de Gastos</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center gap-1" href="index.html">
+                            <i class="bi bi-house-door-fill"></i> Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center gap-1" href="GastosFijos.html">
+                            <i class="bi bi-cash-coin"></i> Gastos Fijos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active d-flex align-items-center gap-1" href="GastosSemanales.html">
+                            <i class="bi bi-credit-card-2-front"></i> Gastos Semanales
+                        </a>
+                    </li>
+                    <!-- Separador visual -->
+                    <li class="nav-item d-none d-lg-flex align-items-center">
+                        <span class="navbar-separador mx-2"></span>
+                    </li>
+                    <!-- Usuario logueado: icono online y nombre -->
+                    <li class="nav-item d-flex align-items-center gap-2 flex-nowrap" id="li-usuario-nav" style="display:none;">
+                        <span class="usuario-online-indicador me-1" id="online-indicador" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Usuario en línea"></span>
+                        <span id="nombre-usuario-nav" class="fw-bold text-white bg-primary px-3 py-1 rounded-pill d-flex align-items-center gap-1 usuario-pill">
+                            <i class="bi bi-person-circle"></i> <span id="nombre-usuario-text"></span>
+                        </span>
+                        <button class="btn btn-danger ms-2 d-flex align-items-center px-3 fw-bold cerrar-sesion-btn" id="btn-cerrar-sesion" tabindex="0">
+                            <i class="bi bi-box-arrow-right me-1"></i> <span class="d-none d-sm-inline">Cerrar sesión</span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Contenedor de notificaciones toast -->
+    <div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 11"></div>
+
+    <main class="container mt-4">
+        <!-- Formulario para configurar/actualizar presupuesto -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">Configurar Presupuesto Mensual</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="form-presupuesto" class="row g-3">
+                            <div class="col-md-6">
+                                <label for="presupuesto-mensual" class="form-label">Presupuesto Mensual</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="presupuesto-mensual" min="1" placeholder="Ingrese su presupuesto mensual" required>
+                                <div class="invalid-feedback">Ingrese un monto válido</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 d-flex align-items-end">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save me-1"></i> Guardar Presupuesto
+                                </button>
+                                <button type="button" id="btn-reiniciar" class="btn btn-outline-danger ms-2">
+                                    <i class="bi bi-arrow-counterclockwise me-1"></i> Reiniciar Todo
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de semanas -->
+        <div id="semanas-container" class="row g-4">
+            <!-- Semana 1 -->
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="semana-card under-budget" data-semana="1">
+                    <div class="semana-card-header">
+                        <h3 class="semana-card-title">
+                            Semana 1
+                            <span class="semana-card-badge">$0,00 restantes</span>
+                        </h3>
+                    </div>
+                    <div class="semana-card-body">
+                        <div class="semana-card-amounts">
+                            <div class="amount-group">
+                                <div class="amount-label">Presupuesto</div>
+                                <div class="amount-value presupuesto">$0,00</div>
+                            </div>
+                            <div class="amount-group">
+                                <div class="amount-label">Gastado</div>
+                                <div class="amount-value gastado">$0,00</div>
+                            </div>
+                        </div>
+                        
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Presupuesto semanal</span>
+                                <span>0%</span>
+                            </div>
+                            <div class="progress-wrapper">
+                                <div class="progress-bar-custom" style="width: 0%">
+                                    <span class="progress-amount">$0,00</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-add-expense" data-bs-toggle="modal" data-bs-target="#modal-gasto">
+                            <i class="bi bi-plus-circle"></i> Agregar Gasto
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Semana 2 -->
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="semana-card under-budget" data-semana="2">
+                    <div class="semana-card-header">
+                        <h3 class="semana-card-title">
+                            Semana 2
+                            <span class="semana-card-badge">$0,00 restantes</span>
+                        </h3>
+                    </div>
+                    <div class="semana-card-body">
+                        <div class="semana-card-amounts">
+                            <div class="amount-group">
+                                <div class="amount-label">Presupuesto</div>
+                                <div class="amount-value presupuesto">$0,00</div>
+                            </div>
+                            <div class="amount-group">
+                                <div class="amount-label">Gastado</div>
+                                <div class="amount-value gastado">$0,00</div>
+                            </div>
+                        </div>
+                        
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Presupuesto semanal</span>
+                                <span>0%</span>
+                            </div>
+                            <div class="progress-wrapper">
+                                <div class="progress-bar-custom" style="width: 0%">
+                                    <span class="progress-amount">$0,00</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-add-expense" data-bs-toggle="modal" data-bs-target="#modal-gasto">
+                            <i class="bi bi-plus-circle"></i> Agregar Gasto
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Semana 3 -->
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="semana-card under-budget" data-semana="3">
+                    <div class="semana-card-header">
+                        <h3 class="semana-card-title">
+                            Semana 3
+                            <span class="semana-card-badge">$0,00 restantes</span>
+                        </h3>
+                    </div>
+                    <div class="semana-card-body">
+                        <div class="semana-card-amounts">
+                            <div class="amount-group">
+                                <div class="amount-label">Presupuesto</div>
+                                <div class="amount-value presupuesto">$0,00</div>
+                            </div>
+                            <div class="amount-group">
+                                <div class="amount-label">Gastado</div>
+                                <div class="amount-value gastado">$0,00</div>
+                            </div>
+                        </div>
+                        
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Presupuesto semanal</span>
+                                <span>0%</span>
+                            </div>
+                            <div class="progress-wrapper">
+                                <div class="progress-bar-custom" style="width: 0%">
+                                    <span class="progress-amount">$0,00</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-add-expense" data-bs-toggle="modal" data-bs-target="#modal-gasto">
+                            <i class="bi bi-plus-circle"></i> Agregar Gasto
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Semana 4 -->
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="semana-card under-budget" data-semana="4">
+                    <div class="semana-card-header">
+                        <h3 class="semana-card-title">
+                            Semana 4
+                            <span class="semana-card-badge">$0,00 restantes</span>
+                        </h3>
+                    </div>
+                    <div class="semana-card-body">
+                        <div class="semana-card-amounts">
+                            <div class="amount-group">
+                                <div class="amount-label">Presupuesto</div>
+                                <div class="amount-value presupuesto">$0,00</div>
+                            </div>
+                            <div class="amount-group">
+                                <div class="amount-label">Gastado</div>
+                                <div class="amount-value gastado">$0,00</div>
+                            </div>
+                        </div>
+                        
+                        <div class="progress-container">
+                            <div class="progress-label">
+                                <span>Presupuesto semanal</span>
+                                <span>0%</span>
+                            </div>
+                            <div class="progress-wrapper">
+                                <div class="progress-bar-custom" style="width: 0%">
+                                    <span class="progress-amount">$0,00</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-add-expense" data-bs-toggle="modal" data-bs-target="#modal-gasto">
+                            <i class="bi bi-plus-circle"></i> Agregar Gasto
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal para agregar/editar gasto -->
+        <div class="modal fade" id="modal-gasto" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modal-gasto-titulo">Nuevo Gasto</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <form id="form-gasto" novalidate>
+                        <div class="modal-body">
+                            <input type="hidden" id="gasto-id">
+                            <input type="hidden" id="gasto-semana">
+                            
+                            <div class="mb-3">
+                                <label for="gasto-descripcion" class="form-label">Descripción</label>
+                                <input type="text" class="form-control" id="gasto-descripcion" placeholder="Ej: Supermercado, Transporte, etc." required>
+                                <div class="invalid-feedback">Ingrese una descripción</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="gasto-monto" class="form-label">Monto</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="gasto-monto" min="1" placeholder="0" required>
+                                </div>
+                                <div class="invalid-feedback">Ingrese un monto válido</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="gasto-fecha" class="form-label">Fecha</label>
+                                <input type="date" class="form-control" id="gasto-fecha" required>
+                                <div class="invalid-feedback">Seleccione una fecha</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="gasto-categoria" class="form-label">Categoría</label>
+                                <div class="invalid-feedback">Seleccione una categoría</div>
+                                    <option value="Comida">Comida</option>
+                                    <option value="Transporte">Transporte</option>
+                                    <option value="Entretenimiento">Entretenimiento</option>
+                                    <option value="Servicios">Servicios</option>
+                                    <option value="Compras">Compras</option>
+                                    <option value="Otros">Otros</option>
+                                </select>
+                                <div class="invalid-feedback">Por favor selecciona una categoría</div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/frontend/assets/js/gastosSemanales.js"></script>
+</body>
+</html>
