@@ -5,21 +5,14 @@
 // - Permite guardar el presupuesto ingresado por el usuario
 // - Actualiza el resumen financiero (presupuesto, gastado, saldo)
 
-// Asegurarse de que el DOM esté completamente cargado
-document.addEventListener('DOMContentLoaded', function() {
-    inicializarAplicacion();
-});
+// Variables globales
+let usuarioActivo = localStorage.getItem('usuarioActivo') || null;
 
-function inicializarAplicacion() {
-    // Verificar si hay un usuario autenticado
-    usuarioActivo = localStorage.getItem('usuarioActivo');
-    if (!usuarioActivo) {
-        mostrarLoginModal();
-    } else {
-        cargarDatosUsuario();
-        ocultarLoginModal();
-    }
-    actualizarUIUsuario();
+// Función para mostrar mensajes de estado
+function mostrarMensaje(mensaje, tipo = 'info') {
+    console.log(`[${tipo.toUpperCase()}] ${mensaje}`);
+    // Aquí podrías implementar un sistema de notificaciones más elaborado
+    alert(mensaje);
 }
 
 // Elementos del DOM
@@ -39,56 +32,143 @@ const btnCerrarSesion = document.getElementById('btn-cerrar-sesion');
 const nombreUsuarioNav = document.getElementById('nombre-usuario-nav');
 const nombreUsuarioText = document.getElementById('nombre-usuario-text');
 
-let usuarioActivo = null;
+// Inicialización cuando el DOM está listo
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM completamente cargado, inicializando aplicación...');
+    
+    // Verificar si hay un usuario autenticado
+    if (usuarioActivo) {
+        console.log('Usuario ya autenticado:', usuarioActivo);
+        actualizarUIUsuario();
+        cargarDatosUsuario();
+        ocultarLoginModal();
+    } else {
+        console.log('No hay usuario autenticado, mostrando formulario de login');
+        mostrarLoginModal();
+    }
+    
+    // Configurar el evento del formulario de login
+    if (formLoginUsuario) {
+        formLoginUsuario.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const nombre = inputLoginUsuario ? inputLoginUsuario.value.trim() : '';
+            
+            // Validación simple
+            if (!nombre || nombre.length < 3) {
+                if (inputLoginUsuario) inputLoginUsuario.classList.add('is-invalid');
+                if (loginErrorMsg) {
+                    loginErrorMsg.textContent = 'Por favor ingrese un nombre válido (mínimo 3 caracteres)';
+                    loginErrorMsg.classList.remove('d-none');
+                }
+                return;
+            }
+            
+            // Si la validación es exitosa
+            usuarioActivo = nombre;
+            localStorage.setItem('usuarioActivo', usuarioActivo);
+            
+            // Actualizar la UI
+            actualizarUIUsuario();
+            ocultarLoginModal();
+            mostrarMensaje(`¡Bienvenido, ${usuarioActivo}!`, 'success');
+            
+            // Recargar para asegurar que todo se inicialice correctamente
+            setTimeout(() => window.location.reload(), 500);
+        });
+    } else {
+        console.error('No se pudo encontrar el formulario de login');
+    }
+});
 
 
 
 // Función para actualizar la UI del usuario
 function actualizarUIUsuario() {
+    console.log('Actualizando UI para usuario:', usuarioActivo);
+    
     if (usuarioActivo) {
-        // Mostrar nombre de usuario en el nav
-        if (nombreUsuarioText) {
-            nombreUsuarioText.textContent = usuarioActivo;
-        }
-        if (liUsuarioNav) {
-            liUsuarioNav.style.display = 'flex';
-            
-            // Actualizar tooltip del indicador de estado
-            const onlineIndicador = document.getElementById('online-indicador');
-            if (onlineIndicador) {
-                onlineIndicador.setAttribute('title', `En línea como ${usuarioActivo}`);
-                if (window.bootstrap && bootstrap.Tooltip) {
-                    // Destruir instancia anterior si existe
-                    const tooltip = bootstrap.Tooltip.getInstance(onlineIndicador);
-                    if (tooltip) tooltip.dispose();
-                    // Crear nueva instancia
-                    new bootstrap.Tooltip(onlineIndicador);
-                }
+        // Mostrar elementos del usuario logueado
+        if (nombreUsuarioText) nombreUsuarioText.textContent = usuarioActivo;
+        if (liUsuarioNav) liUsuarioNav.style.display = 'flex';
+        
+        // Actualizar tooltip del indicador de estado
+        const onlineIndicador = document.getElementById('online-indicador');
+        if (onlineIndicador) {
+            onlineIndicador.setAttribute('title', `En línea como ${usuarioActivo}`);
+            // Reiniciar tooltip de Bootstrap si está disponible
+            if (window.bootstrap && bootstrap.Tooltip) {
+                const tooltip = bootstrap.Tooltip.getInstance(onlineIndicador);
+                if (tooltip) tooltip.dispose();
+                new bootstrap.Tooltip(onlineIndicador);
             }
         }
     } else {
-        if (liUsuarioNav) {
-            liUsuarioNav.style.display = 'none';
-        }
+        // Ocultar elementos del usuario
+        if (liUsuarioNav) liUsuarioNav.style.display = 'none';
     }
 }
 
 function mostrarLoginModal() {
-    loginModal.style.display = 'flex';
-    document.body.classList.add('modal-open');
-    setTimeout(() => inputLoginUsuario.focus(), 200);
-    // Evitar cerrar con Esc o click fuera
-    window.onkeydown = (e) => { if (e.key === 'Escape') e.preventDefault(); };
-    loginModal.onclick = (e) => { if (e.target === loginModal) e.stopPropagation(); };
-    // Limpiar input y feedback
-    inputLoginUsuario.value = '';
-    inputLoginUsuario.classList.remove('is-invalid');
-    loginErrorMsg.style.display = 'none';
+    console.log('Mostrando modal de login');
+    if (loginModal) {
+        // Usar Bootstrap para mostrar el modal si está disponible
+        if (window.bootstrap && bootstrap.Modal) {
+            const modal = new bootstrap.Modal(loginModal);
+            modal.show();
+        } else {
+            // Fallback en caso de que Bootstrap no esté disponible
+            loginModal.style.display = 'flex';
+            document.body.classList.add('modal-open');
+        }
+        
+        // Enfocar el campo de entrada
+        if (inputLoginUsuario) {
+            inputLoginUsuario.focus();
+        }
+        
+        // Si hay un nombre de usuario guardado, mostrarlo
+        const usuarioGuardado = localStorage.getItem('usuarioActivo');
+        if (usuarioGuardado && inputLoginUsuario) {
+            inputLoginUsuario.value = usuarioGuardado;
+        }
+    } else {
+        console.error('No se pudo encontrar el elemento del modal de login');
+    }
 }
+
 function ocultarLoginModal() {
-    loginModal.style.display = 'none';
-    document.body.classList.remove('modal-open');
-    window.onkeydown = null;
+    console.log('Ocultando modal de login');
+    if (loginModal) {
+        // Usar Bootstrap para ocultar el modal si está disponible
+        if (window.bootstrap && bootstrap.Modal) {
+            const modal = bootstrap.Modal.getInstance(loginModal);
+            if (modal) {
+                modal.hide();
+            } else {
+                loginModal.style.display = 'none';
+            }
+        } else {
+            // Fallback en caso de que Bootstrap no esté disponible
+            loginModal.style.display = 'none';
+        }
+        
+        document.body.classList.remove('modal-open');
+        
+        // Limpiar el formulario
+        if (formLoginUsuario) {
+            formLoginUsuario.reset();
+        }
+        
+        // Remover clases de validación
+        if (inputLoginUsuario) {
+            inputLoginUsuario.classList.remove('is-invalid');
+        }
+        
+        if (loginErrorMsg) {
+            loginErrorMsg.classList.add('d-none');
+        }
+    }
 }
 
 // Validar solo letras y espacios
@@ -150,10 +230,19 @@ if (formLoginUsuario) {
 // Botón cerrar sesión
 if (btnCerrarSesion) {
     btnCerrarSesion.addEventListener('click', function() {
-        localStorage.removeItem('usuarioActivo');
-        usuarioActivo = null;
-        mostrarLoginModal();
-        actualizarCerrarSesion();
+        if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+            console.log('Cerrando sesión...');
+            localStorage.removeItem('usuarioActivo');
+            usuarioActivo = null;
+            actualizarUIUsuario();
+            mostrarLoginModal();
+            mostrarMensaje('Has cerrado sesión correctamente', 'info');
+            
+            // Recargar la página para limpiar cualquier estado
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
+        }
     });
 }
 
