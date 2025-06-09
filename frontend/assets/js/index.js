@@ -1,19 +1,9 @@
 // index.js - Lógica específica de la página de inicio (dashboard)
 // -------------------------------------------------------------
 // Este archivo controla la interacción de la página principal:
-// - Maneja la autenticación del usuario
 // - Permite guardar el presupuesto ingresado por el usuario
 // - Actualiza el resumen financiero (presupuesto, gastado, saldo)
-
-// Variables globales
-let usuarioActivo = localStorage.getItem('usuarioActivo') || null;
-
-// Función para mostrar mensajes de estado
-function mostrarMensaje(mensaje, tipo = 'info') {
-    console.log(`[${tipo.toUpperCase()}] ${mensaje}`);
-    // Aquí podrías implementar un sistema de notificaciones más elaborado
-    alert(mensaje);
-}
+// - Deja preparado el bloque para futura conexión con el backend
 
 // Elementos del DOM
 const formPresupuesto = document.getElementById('form-presupuesto');
@@ -32,143 +22,35 @@ const btnCerrarSesion = document.getElementById('btn-cerrar-sesion');
 const nombreUsuarioNav = document.getElementById('nombre-usuario-nav');
 const nombreUsuarioText = document.getElementById('nombre-usuario-text');
 
-// Inicialización cuando el DOM está listo
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM completamente cargado, inicializando aplicación...');
-    
-    // Verificar si hay un usuario autenticado
-    if (usuarioActivo) {
-        console.log('Usuario ya autenticado:', usuarioActivo);
-        actualizarUIUsuario();
+let usuarioActivo = null;
+
+window.addEventListener('DOMContentLoaded', () => {
+    usuarioActivo = localStorage.getItem('usuarioActivo');
+    if (!usuarioActivo) {
+        mostrarLoginModal();
+    } else {
         cargarDatosUsuario();
         ocultarLoginModal();
-    } else {
-        console.log('No hay usuario autenticado, mostrando formulario de login');
-        mostrarLoginModal();
     }
-    
-    // Configurar el evento del formulario de login
-    if (formLoginUsuario) {
-        formLoginUsuario.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const nombre = inputLoginUsuario ? inputLoginUsuario.value.trim() : '';
-            
-            // Validación simple
-            if (!nombre || nombre.length < 3) {
-                if (inputLoginUsuario) inputLoginUsuario.classList.add('is-invalid');
-                if (loginErrorMsg) {
-                    loginErrorMsg.textContent = 'Por favor ingrese un nombre válido (mínimo 3 caracteres)';
-                    loginErrorMsg.classList.remove('d-none');
-                }
-                return;
-            }
-            
-            // Si la validación es exitosa
-            usuarioActivo = nombre;
-            localStorage.setItem('usuarioActivo', usuarioActivo);
-            
-            // Actualizar la UI
-            actualizarUIUsuario();
-            ocultarLoginModal();
-            mostrarMensaje(`¡Bienvenido, ${usuarioActivo}!`, 'success');
-            
-            // Recargar para asegurar que todo se inicialice correctamente
-            setTimeout(() => window.location.reload(), 500);
-        });
-    } else {
-        console.error('No se pudo encontrar el formulario de login');
-    }
+    actualizarCerrarSesion();
 });
 
-
-
-// Función para actualizar la UI del usuario
-function actualizarUIUsuario() {
-    console.log('Actualizando UI para usuario:', usuarioActivo);
-    
-    if (usuarioActivo) {
-        // Mostrar elementos del usuario logueado
-        if (nombreUsuarioText) nombreUsuarioText.textContent = usuarioActivo;
-        if (liUsuarioNav) liUsuarioNav.style.display = 'flex';
-        
-        // Actualizar tooltip del indicador de estado
-        const onlineIndicador = document.getElementById('online-indicador');
-        if (onlineIndicador) {
-            onlineIndicador.setAttribute('title', `En línea como ${usuarioActivo}`);
-            // Reiniciar tooltip de Bootstrap si está disponible
-            if (window.bootstrap && bootstrap.Tooltip) {
-                const tooltip = bootstrap.Tooltip.getInstance(onlineIndicador);
-                if (tooltip) tooltip.dispose();
-                new bootstrap.Tooltip(onlineIndicador);
-            }
-        }
-    } else {
-        // Ocultar elementos del usuario
-        if (liUsuarioNav) liUsuarioNav.style.display = 'none';
-    }
-}
-
 function mostrarLoginModal() {
-    console.log('Mostrando modal de login');
-    if (loginModal) {
-        // Usar Bootstrap para mostrar el modal si está disponible
-        if (window.bootstrap && bootstrap.Modal) {
-            const modal = new bootstrap.Modal(loginModal);
-            modal.show();
-        } else {
-            // Fallback en caso de que Bootstrap no esté disponible
-            loginModal.style.display = 'flex';
-            document.body.classList.add('modal-open');
-        }
-        
-        // Enfocar el campo de entrada
-        if (inputLoginUsuario) {
-            inputLoginUsuario.focus();
-        }
-        
-        // Si hay un nombre de usuario guardado, mostrarlo
-        const usuarioGuardado = localStorage.getItem('usuarioActivo');
-        if (usuarioGuardado && inputLoginUsuario) {
-            inputLoginUsuario.value = usuarioGuardado;
-        }
-    } else {
-        console.error('No se pudo encontrar el elemento del modal de login');
-    }
+    loginModal.style.display = 'flex';
+    document.body.classList.add('modal-open');
+    setTimeout(() => inputLoginUsuario.focus(), 200);
+    // Evitar cerrar con Esc o click fuera
+    window.onkeydown = (e) => { if (e.key === 'Escape') e.preventDefault(); };
+    loginModal.onclick = (e) => { if (e.target === loginModal) e.stopPropagation(); };
+    // Limpiar input y feedback
+    inputLoginUsuario.value = '';
+    inputLoginUsuario.classList.remove('is-invalid');
+    loginErrorMsg.style.display = 'none';
 }
-
 function ocultarLoginModal() {
-    console.log('Ocultando modal de login');
-    if (loginModal) {
-        // Usar Bootstrap para ocultar el modal si está disponible
-        if (window.bootstrap && bootstrap.Modal) {
-            const modal = bootstrap.Modal.getInstance(loginModal);
-            if (modal) {
-                modal.hide();
-            } else {
-                loginModal.style.display = 'none';
-            }
-        } else {
-            // Fallback en caso de que Bootstrap no esté disponible
-            loginModal.style.display = 'none';
-        }
-        
-        document.body.classList.remove('modal-open');
-        
-        // Limpiar el formulario
-        if (formLoginUsuario) {
-            formLoginUsuario.reset();
-        }
-        
-        // Remover clases de validación
-        if (inputLoginUsuario) {
-            inputLoginUsuario.classList.remove('is-invalid');
-        }
-        
-        if (loginErrorMsg) {
-            loginErrorMsg.classList.add('d-none');
-        }
-    }
+    loginModal.style.display = 'none';
+    document.body.classList.remove('modal-open');
+    window.onkeydown = null;
 }
 
 // Validar solo letras y espacios
@@ -192,63 +74,56 @@ if (formLoginUsuario) {
     formLoginUsuario.addEventListener('submit', function(e) {
         e.preventDefault();
         let nombre = inputLoginUsuario.value.trim();
-        
-        // Validar el nombre
         if (!esNombreValido(nombre)) {
             inputLoginUsuario.classList.add('is-invalid');
-            if (loginErrorMsg) {
-                loginErrorMsg.classList.remove('d-none');
-            }
+            loginErrorMsg.style.display = 'block';
             return;
         }
-        
-        // Si la validación es exitosa
         inputLoginUsuario.classList.remove('is-invalid');
-        if (loginErrorMsg) {
-            loginErrorMsg.classList.add('d-none');
-        }
-        
-        // Guardar usuario y actualizar UI
+        loginErrorMsg.style.display = 'none';
         usuarioActivo = nombre;
         localStorage.setItem('usuarioActivo', usuarioActivo);
-        
-        // Cerrar modal y actualizar la interfaz
         ocultarLoginModal();
         cargarDatosUsuario();
-        actualizarUIUsuario();
-        
-        // Mostrar mensaje de bienvenida
         mostrarMensaje('¡Bienvenido, ' + usuarioActivo + '!', 'success');
-        
-        // Recargar la página para asegurar que todo se actualice correctamente
-        setTimeout(() => {
-            window.location.reload();
-        }, 1000);
+        actualizarCerrarSesion();
     });
+} else {
+    console.warn('El formulario de login no fue encontrado en el DOM');
 }
 
 // Botón cerrar sesión
 if (btnCerrarSesion) {
     btnCerrarSesion.addEventListener('click', function() {
-        if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
-            console.log('Cerrando sesión...');
-            localStorage.removeItem('usuarioActivo');
-            usuarioActivo = null;
-            actualizarUIUsuario();
-            mostrarLoginModal();
-            mostrarMensaje('Has cerrado sesión correctamente', 'info');
-            
-            // Recargar la página para limpiar cualquier estado
-            setTimeout(() => {
-                window.location.reload();
-            }, 500);
-        }
+        localStorage.removeItem('usuarioActivo');
+        usuarioActivo = null;
+        mostrarLoginModal();
+        actualizarCerrarSesion();
     });
 }
 
-// Función para actualizar la UI del cierre de sesión
+// Mostrar/ocultar botón cerrar sesión
+// Mostrar/ocultar nombre de usuario y botón cerrar sesión en navbar
 function actualizarCerrarSesion() {
-    actualizarUIUsuario();
+    if (usuarioActivo && liUsuarioNav && nombreUsuarioNav && nombreUsuarioText) {
+        nombreUsuarioText.textContent = usuarioActivo;
+        liUsuarioNav.style.display = 'flex';
+        // Tooltip dinámico en el círculo verde
+        const onlineIndicador = document.getElementById('online-indicador');
+        if (onlineIndicador) {
+            onlineIndicador.setAttribute('title', `En línea como ${usuarioActivo}`);
+            if (window.bootstrap && bootstrap.Tooltip) {
+                bootstrap.Tooltip.getInstance(onlineIndicador)?.dispose();
+                new bootstrap.Tooltip(onlineIndicador);
+            }
+        }
+        // Animación fadeIn
+        nombreUsuarioNav.classList.remove('fadein-usuario');
+        void nombreUsuarioNav.offsetWidth; // trigger reflow
+        nombreUsuarioNav.classList.add('fadein-usuario');
+    } else if (liUsuarioNav) {
+        liUsuarioNav.style.display = 'none';
+    }
 }
 
 
