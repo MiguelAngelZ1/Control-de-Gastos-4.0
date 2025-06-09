@@ -5,6 +5,23 @@
 // - Permite guardar el presupuesto ingresado por el usuario
 // - Actualiza el resumen financiero (presupuesto, gastado, saldo)
 
+// Asegurarse de que el DOM esté completamente cargado
+document.addEventListener('DOMContentLoaded', function() {
+    inicializarAplicacion();
+});
+
+function inicializarAplicacion() {
+    // Verificar si hay un usuario autenticado
+    usuarioActivo = localStorage.getItem('usuarioActivo');
+    if (!usuarioActivo) {
+        mostrarLoginModal();
+    } else {
+        cargarDatosUsuario();
+        ocultarLoginModal();
+    }
+    actualizarUIUsuario();
+}
+
 // Elementos del DOM
 const formPresupuesto = document.getElementById('form-presupuesto');
 const inputPresupuesto = document.getElementById('inputPresupuesto');
@@ -24,18 +41,7 @@ const nombreUsuarioText = document.getElementById('nombre-usuario-text');
 
 let usuarioActivo = null;
 
-// Inicialización cuando el DOM está listo
-document.addEventListener('DOMContentLoaded', function() {
-    // Verificar si hay un usuario autenticado
-    usuarioActivo = localStorage.getItem('usuarioActivo');
-    if (!usuarioActivo) {
-        mostrarLoginModal();
-    } else {
-        cargarDatosUsuario();
-        ocultarLoginModal();
-    }
-    actualizarUIUsuario();
-});
+
 
 // Función para actualizar la UI del usuario
 function actualizarUIUsuario() {
@@ -102,23 +108,44 @@ inputLoginUsuario.addEventListener('input', function() {
 });
 
 // Evento login
-formLoginUsuario.addEventListener('submit', function(e) {
-    e.preventDefault();
-    let nombre = inputLoginUsuario.value.trim();
-    if (!esNombreValido(nombre)) {
-        inputLoginUsuario.classList.add('is-invalid');
-        loginErrorMsg.style.display = 'block';
-        return;
-    }
-    inputLoginUsuario.classList.remove('is-invalid');
-    loginErrorMsg.style.display = 'none';
-    usuarioActivo = nombre;
-    localStorage.setItem('usuarioActivo', usuarioActivo);
-    ocultarLoginModal();
-    cargarDatosUsuario();
-    mostrarMensaje('¡Bienvenido, ' + usuarioActivo + '!', 'success');
-    actualizarCerrarSesion();
-});
+if (formLoginUsuario) {
+    formLoginUsuario.addEventListener('submit', function(e) {
+        e.preventDefault();
+        let nombre = inputLoginUsuario.value.trim();
+        
+        // Validar el nombre
+        if (!esNombreValido(nombre)) {
+            inputLoginUsuario.classList.add('is-invalid');
+            if (loginErrorMsg) {
+                loginErrorMsg.classList.remove('d-none');
+            }
+            return;
+        }
+        
+        // Si la validación es exitosa
+        inputLoginUsuario.classList.remove('is-invalid');
+        if (loginErrorMsg) {
+            loginErrorMsg.classList.add('d-none');
+        }
+        
+        // Guardar usuario y actualizar UI
+        usuarioActivo = nombre;
+        localStorage.setItem('usuarioActivo', usuarioActivo);
+        
+        // Cerrar modal y actualizar la interfaz
+        ocultarLoginModal();
+        cargarDatosUsuario();
+        actualizarUIUsuario();
+        
+        // Mostrar mensaje de bienvenida
+        mostrarMensaje('¡Bienvenido, ' + usuarioActivo + '!', 'success');
+        
+        // Recargar la página para asegurar que todo se actualice correctamente
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
+    });
+}
 
 // Botón cerrar sesión
 if (btnCerrarSesion) {
