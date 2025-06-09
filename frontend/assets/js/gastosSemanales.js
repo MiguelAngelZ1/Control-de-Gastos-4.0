@@ -241,8 +241,8 @@ function inicializarSemanas() {
     Math.floor((state.presupuestoMensual / SEMANAS_POR_MES) * 100) / 100 : 0;
   
   for (let i = 1; i <= SEMANAS_POR_MES; i++) {
-    const gastosSemana = state.gastos.filter(g => g.semana === i);
-    const totalGastado = gastosSemana.reduce((sum, g) => sum + parseFloat(g.monto), 0);
+    const gastosSemana = state.gastos.filter(g => parseInt(g.semana) === i);
+    const totalGastado = gastosSemana.reduce((sum, g) => sum + g.monto, 0);
     
     state.semanas.push({
       numero: i,
@@ -254,7 +254,6 @@ function inicializarSemanas() {
     });
   }
 }
-
 /**
  * Guarda los datos en el almacenamiento local
  */
