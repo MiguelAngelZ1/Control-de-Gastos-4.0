@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="./frontend/assets/css/style.css">
 </head>
 <body>
-    <!-- Navbar igual a index -->
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
         <div class="container-fluid">
             <a class="navbar-brand" href="index.html">Control de Gastos</a>
@@ -36,11 +36,9 @@
                             <i class="bi bi-credit-card-2-front"></i> Gastos Semanales
                         </a>
                     </li>
-                    <!-- Separador visual -->
                     <li class="nav-item d-none d-lg-flex align-items-center">
                         <span class="navbar-separador mx-2"></span>
                     </li>
-                    <!-- Usuario logueado: icono online y nombre -->
                     <li class="nav-item d-flex align-items-center gap-2 flex-nowrap" id="li-usuario-nav" style="display:none;">
                         <span class="usuario-online-indicador me-1" id="online-indicador" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Usuario en línea"></span>
                         <span id="nombre-usuario-nav" class="fw-bold text-white bg-primary px-3 py-1 rounded-pill d-flex align-items-center gap-1 usuario-pill">
@@ -51,126 +49,136 @@
                         </button>
                     </li>
                 </ul>
+            </div>
+        </div>
     </nav>
-    <main class="container mt-5">
+
+    <main class="container mt-4">
         <div class="row justify-content-center">
-            <div class="col-lg-8">
+            <div class="col-lg-10">
+                <!-- Tarjeta de Nuevo Gasto Fijo -->
                 <div class="card shadow-sm mb-4">
                     <div class="card-header bg-primary text-white">
-                        <h5 class="card-title mb-0">Nuevo Gasto Fijo</h5>
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-journal-plus me-2"></i>Nuevo Gasto Fijo
+                        </h5>
                     </div>
                     <div class="card-body">
                         <form id="form-gasto-fijo" novalidate>
                             <div class="row g-3">
-                            <!-- Titulo -->
-                            <div class="col-12 mb-2">
-                                <h5 class="card-title fw-semibold text-primary mb-0">
-                                <i class="bi bi-journal-plus me-1"></i> Nuevo Gasto Fijo
-                                </h5>
-                            </div>
-                            <!-- Fila del formulario -->
-                            <div class="row g-3">
-                            <!-- Campo Descripción -->
-                            <div class="col-12 col-md-5 col-xxl-4">
-                                <label for="gasto-descripcion" class="form-label">Descripción</label>
-                                <input type="text" class="form-control" id="gasto-descripcion" placeholder="Ej: Alquiler, Servicios, etc." required>
-                                <div class="invalid-feedback">Ingrese una descripción</div>
-                            </div>
-                            <!-- Campo Monto -->
-                            <div class="col-12 col-md-3 col-xxl-2">
-                                <label for="gasto-monto" class="form-label">Monto</label>
-                                <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-currency-dollar"></i></span>
-                                <input type="text" 
-                                        class="form-control" 
-                                        id="gasto-monto" 
-                                        placeholder="0" 
-                                        required 
-                                        autocomplete="off"
-                                        inputmode="numeric"
-                                        pattern="[0-9.,]+">
+                                <!-- Campo Descripción -->
+                                <div class="col-12 col-md-5">
+                                    <label for="gasto-descripcion" class="form-label">Descripción</label>
+                                    <input type="text" class="form-control" id="gasto-descripcion" placeholder="Ej: Alquiler, Servicios, etc." required>
+                                    <div class="invalid-feedback">Ingrese una descripción</div>
                                 </div>
-                                <div class="invalid-feedback">Ingrese un monto válido</div>
-                            </div>
-                            <!-- Campo Estado -->
-                            <div class="col-12 col-md-4 col-xxl-2">
-                                <label for="gasto-estado" class="form-label">Estado</label>
-                                <select id="gasto-estado" class="form-select select-estado" required>
-                                <option value="" disabled selected>Seleccionar una opción</option>
-                                <option value="Pagado">Pagado</option>
-                                <option value="Pendiente">Pendiente</option>
-                                </select>
-                                <div class="invalid-feedback">Seleccione un estado</div>
-                            </div>
-                            </div>
-
-                            <!-- Fila de botones -->
-                            <div class="row mt-3">
-                            <div class="col-12">
-                                <div class="d-flex flex-wrap gap-2">
-                                <button type="submit" class="btn btn-success d-flex align-items-center" title="Agregar">
-                                    <i class="bi bi-plus-circle me-1"></i>
-                                    <span>Agregar</span>
-                                </button>
-                                <button type="button" class="btn btn-outline-secondary d-flex align-items-center" id="btn-limpiar-gasto" title="Limpiar campos">
-                                    <i class="bi bi-eraser me-1"></i>
-                                    <span>Limpiar</span>
-                                </button>
+                                
+                                <!-- Campo Monto -->
+                                <div class="col-12 col-md-3">
+                                    <label for="gasto-monto" class="form-label">Monto</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-currency-dollar"></i></span>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="gasto-monto" 
+                                               placeholder="0" 
+                                               required 
+                                               autocomplete="off"
+                                               inputmode="numeric"
+                                               pattern="[0-9.,]+">
+                                    </div>
+                                    <div class="invalid-feedback">Ingrese un monto válido</div>
                                 </div>
-                            </div>
+                                
+                                <!-- Campo Estado -->
+                                <div class="col-12 col-md-2">
+                                    <label for="gasto-estado" class="form-label">Estado</label>
+                                    <select id="gasto-estado" class="form-select" required>
+                                        <option value="" disabled selected>Seleccionar</option>
+                                        <option value="Pagado">Pagado</option>
+                                        <option value="Pendiente">Pendiente</option>
+                                    </select>
+                                    <div class="invalid-feedback">Seleccione un estado</div>
+                                </div>
+                                
+                                <!-- Botones -->
+                                <div class="col-12 col-md-2 d-flex align-items-end">
+                                    <div class="d-flex gap-2 w-100">
+                                        <button type="submit" class="btn btn-success flex-grow-1 d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-plus-circle me-1"></i>
+                                            <span>Agregar</span>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary d-flex align-items-center" id="btn-limpiar-gasto">
+                                            <i class="bi bi-eraser"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </form>
                     </div>
                 </div>
-            </div>
-            <hr class="my-2 my-md-3">
-            <div class="table-responsive">
-                <table class="table-gastos">
-                    <thead>
-                        <tr>
-                            <th>Descripción</th>
-                            <th>Monto</th>
-                            <th>Estado</th>
-                            <th class="acciones">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-gastos-fijos-body">
-                        <tr id="sin-gastos" class="d-none">
-                            <td colspan="4" class="sin-datos">
-                                <i class="bi bi-inbox"></i>
-                                <h5>No hay gastos fijos registrados</h5>
-                                <p>Comienza agregando un nuevo gasto fijo</p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</main>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="./frontend/assets/js/main.js"></script>
-<script src="./frontend/assets/js/gastosFijos.js"></script>
 
-<!-- Contenedor para mensajes toast -->
-<div id="toastContainer" class="toast-container"></div>
-    <!-- Modal de confirmación de eliminación -->
-    <div class="modal fade" id="modalConfirmarEliminacion" tabindex="-1" aria-labelledby="modalConfirmarEliminacionLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="modalConfirmarEliminacionLabel"><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Confirmar eliminación</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-          </div>
-          <div class="modal-body">
-            ¿Está seguro que desea eliminar este gasto fijo? Esta acción no se puede deshacer.
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" id="btnCancelarEliminarGasto">Cancelar</button>
-            <button type="button" class="btn btn-danger" id="btnConfirmarEliminarGasto">Eliminar</button>
-          </div>
+                <!-- Tabla de Gastos Fijos -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light">
+                        <h5 class="card-title mb-0">Listado de Gastos Fijos</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Descripción</th>
+                                        <th class="text-end">Monto</th>
+                                        <th>Estado</th>
+                                        <th class="text-center">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-gastos-fijos-body">
+                                    <tr id="sin-gastos">
+                                        <td colspan="4" class="text-center py-4">
+                                            <div class="text-muted">
+                                                <i class="bi bi-inbox display-6 d-block mb-2"></i>
+                                                <h5>No hay gastos fijos registrados</h5>
+                                                <p class="mb-0">Comienza agregando un nuevo gasto fijo</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+    </main>
+
+    <!-- Modal de confirmación de eliminación -->
+    <div class="modal fade" id="modalConfirmarEliminacion" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Confirmar eliminación
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Está seguro que desea eliminar este gasto fijo? Esta acción no se puede deshacer.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="btnConfirmarEliminarGasto">Eliminar</button>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- Contenedor para mensajes toast -->
+    <div id="toastContainer" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./frontend/assets/js/main.js"></script>
+    <script src="./frontend/assets/js/gastosFijos.js"></script>
 </body>
 </html>
