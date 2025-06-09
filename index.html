@@ -1,186 +1,170 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Control de Gastos - Inicio</title>
-  <link rel="icon" href="assets/img/favicon.ico"/>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <link rel="stylesheet" href="./assets/css/style.css"/>
-  <!-- Bootstrap Icons CDN -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Gastos - Inicio</title>
+    <link rel="icon" href="./frontend/assets/img/favicon.ico">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./frontend/assets/css/style.css">
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 </head>
 <body>
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="index.html">Control de Gastos</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="nav-link active d-flex align-items-center gap-1" href="index.html">
-              <i class="bi bi-house-door-fill"></i> Inicio
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link d-flex align-items-center gap-1" href="GastosFijos.html">
-              <i class="bi bi-cash-coin"></i> Gastos Fijos
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link d-flex align-items-center gap-1" href="GastosSemanales.html">
-              <i class="bi bi-credit-card-2-front"></i> Gastos Semanales
-            </a>
-          </li>
-          <li class="nav-item d-none d-lg-flex align-items-center">
-            <span class="navbar-separador mx-2"></span>
-          </li>
-          <li class="nav-item d-flex align-items-center gap-2 flex-nowrap" id="li-usuario-nav" style="display:none;">
-            <span class="usuario-online-indicador me-1" id="online-indicador" title="Usuario en línea"></span>
-            <span id="nombre-usuario-nav" class="fw-bold text-white bg-primary px-3 py-1 rounded-pill d-flex align-items-center gap-1 usuario-pill">
-              <i class="bi bi-person-circle"></i> <span id="nombre-usuario-text"></span>
-            </span>
-            <button class="btn btn-danger ms-2 d-flex align-items-center px-3 fw-bold cerrar-sesion-btn" id="btn-cerrar-sesion">
-              <i class="bi bi-box-arrow-right me-1"></i> <span class="d-none d-sm-inline">Cerrar sesión</span>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">Control de Gastos</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
             </button>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-
-  <main class="container mt-4">
-    <!-- Modal de Login -->
-    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content p-4 text-center border-0 shadow-lg">
-          <div class="modal-body">
-            <div class="avatar-login mx-auto mb-3">
-              <i class="bi bi-person-circle fs-1"></i>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active d-flex align-items-center gap-1" href="index.html">
+                            <i class="bi bi-house-door-fill"></i> Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center gap-1" href="GastosFijos.html">
+                            <i class="bi bi-cash-coin"></i> Gastos Fijos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link d-flex align-items-center gap-1" href="GastosSemanales.html">
+                            <i class="bi bi-credit-card-2-front"></i> Gastos Semanales
+                        </a>
+                    </li>
+                    <!-- Separador visual -->
+                    <li class="nav-item d-none d-lg-flex align-items-center">
+                        <span class="navbar-separador mx-2"></span>
+                    </li>
+                    <!-- Usuario logueado: icono online y nombre -->
+                    <li class="nav-item d-flex align-items-center gap-2 flex-nowrap" id="li-usuario-nav" style="display:none;">
+                        <span class="usuario-online-indicador me-1" id="online-indicador" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Usuario en línea"></span>
+                        <span id="nombre-usuario-nav" class="fw-bold text-white bg-primary px-3 py-1 rounded-pill d-flex align-items-center gap-1 usuario-pill">
+                            <i class="bi bi-person-circle"></i> <span id="nombre-usuario-text"></span>
+                        </span>
+                        <button class="btn btn-danger ms-2 d-flex align-items-center px-3 fw-bold cerrar-sesion-btn" id="btn-cerrar-sesion" tabindex="0">
+                            <i class="bi bi-box-arrow-right me-1"></i> <span class="d-none d-sm-inline">Cerrar sesión</span>
+                        </button>
+                    </li>
+                </ul>
             </div>
-            <h2 class="mb-2 fw-bold">¡Bienvenido!</h2>
-            <p class="mb-4 text-muted">Accedé a tu presupuesto personal</p>
-            <form id="form-login-usuario" autocomplete="off">
-              <div class="mb-3">
-                <input type="text" class="form-control form-control-lg text-center" id="inputLoginUsuario" placeholder="Ingrese su nombre" maxlength="30" required pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+"/>
+        </div>
+    </nav>
+    <main class="container mt-4">
+        <!-- Formulario de presupuesto -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">Configurar Presupuesto</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Modal de Login de Usuario (diseño profesional) -->
+<div class="modal fade show" id="loginModal" tabindex="-1" aria-modal="true" role="dialog" style="display: none; background: rgba(0,0,0,0.7);">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-4 text-center border-0 shadow-lg animate__animated animate__fadeInDown">
+            <div class="modal-body">
+                <div class="avatar-login mx-auto mb-3">
+                    <i class="bi bi-person-circle"></i>
+                </div>
+        <h2 class="mb-2 fw-bold">¡Bienvenido!</h2>
+        <p class="mb-4 text-muted">Accedé a tu presupuesto personal</p>
+        <form id="form-login-usuario" autocomplete="off">
+            <div class="mb-3">
+                <input type="text" class="form-control form-control-lg text-center input-login-animado" id="inputLoginUsuario" placeholder="Ingrese su nombre" maxlength="30" required pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+">
                 <div class="invalid-feedback">Ingrese un nombre válido (solo letras y espacios)</div>
-              </div>
-              <button type="submit" class="btn btn-primary btn-lg w-100 d-flex align-items-center justify-content-center gap-2 fw-bold">
-                <i class="bi bi-box-arrow-in-right"></i> Ingresar
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Fin Modal -->
-
-    <!-- Formulario de presupuesto -->
-    <div class="row mb-4">
-      <div class="col-12">
-        <div class="card shadow-sm">
-          <div class="card-header bg-primary text-white">
-            <h5 class="card-title mb-0">Configurar Presupuesto</h5>
-          </div>
-          <div class="card-body">
-            <form id="form-presupuesto" class="row g-3">
-              <div class="col-md-6">
-                <label for="inputPresupuesto" class="form-label">Presupuesto Inicial</label>
-                <div class="input-group">
-                  <span class="input-group-text"><i class="bi bi-currency-dollar"></i></span>
-                  <input type="text" class="form-control" id="inputPresupuesto" placeholder="Ingrese su presupuesto inicial" required/>
-                  <div class="invalid-feedback">Ingrese un monto válido</div>
-                </div>
-              </div>
-              <div class="col-md-6 d-flex align-items-end gap-2">
-                <button type="submit" class="btn btn-primary d-flex align-items-center">
-                  <i class="bi bi-save me-1"></i> Guardar
-                </button>
-                <button type="button" class="btn btn-outline-danger d-flex align-items-center" id="btn-limpiar-resumen">
-                  <i class="bi bi-trash3 me-1"></i> Limpiar Todo
-                </button>
-                <button type="button" class="btn btn-outline-secondary d-flex align-items-center" id="btn-tema" title="Cambiar tema">
-                  <i id="icono-tema" class="bi bi-moon-stars"></i>
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Resumen Financiero -->
-    <div class="row">
-      <div class="col-12">
-        <div class="card shadow-sm">
-          <div class="card-header bg-primary text-white">
-            <h5 class="card-title mb-0">Resumen Financiero</h5>
-          </div>
-          <div class="card-body">
-            <div class="row text-center">
-              <div class="col-md-4 mb-3 mb-md-0">
-                <div class="card border-primary h-100">
-                  <div class="card-body py-3">
-                    <div class="mb-2"><i class="bi bi-wallet2 fs-3 text-primary"></i></div>
-                    <h6 class="card-subtitle mb-2 text-muted">TOTAL PRESUPUESTO</h6>
-                    <p id="total-presupuesto" class="fs-4 fw-bold text-primary mb-0">$0</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4 mb-3 mb-md-0">
-                <div class="card border-danger h-100">
-                  <div class="card-body py-3">
-                    <div class="mb-2"><i class="bi bi-cash-stack fs-3 text-danger"></i></div>
-                    <h6 class="card-subtitle mb-2 text-muted">TOTAL GASTADO</h6>
-                    <p id="total-gastado" class="fs-4 fw-bold text-danger mb-0">$0</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="card border-success h-100">
-                  <div class="card-body py-3">
-                    <div class="mb-2"><i class="bi bi-piggy-bank fs-3 text-success"></i></div>
-                    <h6 class="card-subtitle mb-2 text-muted">SALDO RESTANTE</h6>
-                    <p id="saldo-restante" class="fs-4 fw-bold text-success mb-0">$0</p>
-                  </div>
-                </div>
-              </div>
             </div>
-          </div>
+            <button type="submit" class="btn btn-primary btn-lg w-100 d-flex align-items-center justify-content-center gap-2 fw-bold">
+                <i class="bi bi-box-arrow-in-right"></i> Ingresar
+            </button>
+        </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
         </div>
-      </div>  
     </div>
-  </main>
+</div>
+<!-- Fin Modal Login -->
+                        <form id="form-presupuesto" class="row g-3">
+                            <div class="col-md-6">
+                                <label for="inputPresupuesto" class="form-label">Presupuesto Inicial</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-currency-dollar"></i></span>
+                                    <input type="text" class="form-control" id="inputPresupuesto" placeholder="Ingrese su presupuesto inicial" required>
+                                    <div class="invalid-feedback">Ingrese un monto válido</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 d-flex align-items-end gap-2">
+                                <button type="submit" class="btn btn-primary d-flex align-items-center">
+                                    <i class="bi bi-save me-1"></i> Guardar
+                                </button>
+                                <button type="button" class="btn btn-outline-danger d-flex align-items-center" id="btn-limpiar-resumen">
+                                    <i class="bi bi-trash3 me-1"></i> Limpiar Todo
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary d-flex align-items-center" id="btn-tema" aria-label="Cambiar tema" title="Cambiar tema">
+                                    <i id="icono-tema" class="bi bi-moon-stars"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-  <!-- Bootstrap JS y scripts personalizados -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="./assets/js/main.js"></script>
-  <script src="./assets/js/index.js"></script>
-
-  <script>
-    // Mostrar modal al cargar
-    document.addEventListener("DOMContentLoaded", () => {
-      const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
-      loginModal.show();
-
-      const formLogin = document.getElementById('form-login-usuario');
-      formLogin.addEventListener('submit', function (e) {
-        e.preventDefault();
-        const input = document.getElementById('inputLoginUsuario');
-        const nombre = input.value.trim();
-        if (nombre.match(/^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$/)) {
-          document.getElementById('nombre-usuario-text').textContent = nombre;
-          document.getElementById('li-usuario-nav').style.display = 'flex';
-          loginModal.hide();
-        } else {
-          input.classList.add('is-invalid');
-        }
-      });
-    });
-  </script>
+        <!-- Resumen Financiero -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">Resumen Financiero</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-4 mb-3 mb-md-0">
+                                <div class="card border-primary h-100">
+                                    <div class="card-body py-3">
+                                        <div class="mb-2">
+                                            <i class="bi bi-wallet2 fs-3 text-primary"></i>
+                                        </div>
+                                        <h6 class="card-subtitle mb-2 text-muted">TOTAL PRESUPUESTO</h6>
+                                        <p id="total-presupuesto" class="fs-4 fw-bold text-primary mb-0">$0</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3 mb-md-0">
+                                <div class="card border-danger h-100">
+                                    <div class="card-body py-3">
+                                        <div class="mb-2">
+                                            <i class="bi bi-cash-stack fs-3 text-danger"></i>
+                                        </div>
+                                        <h6 class="card-subtitle mb-2 text-muted">TOTAL GASTADO</h6>
+                                        <p id="total-gastado" class="fs-4 fw-bold text-danger mb-0">$0</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card border-success h-100">
+                                    <div class="card-body py-3">
+                                        <div class="mb-2">
+                                            <i class="bi bi-piggy-bank fs-3 text-success"></i>
+                                        </div>
+                                        <h6 class="card-subtitle mb-2 text-muted">SALDO RESTANTE</h6>
+                                        <p id="saldo-restante" class="fs-4 fw-bold text-success mb-0">$0</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    </section>
+</main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./frontend/assets/js/main.js"></script>
+    <script src="./frontend/assets/js/index.js"></script>
 </body>
-              </html>
+</html>
